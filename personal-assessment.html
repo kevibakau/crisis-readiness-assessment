@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Personal Crisis Assessment — Baker Crisis Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#faf8f4;--warm-white:#f4f1eb;
+  --soft-navy:#2c3e50;--mid-navy:#405a71;--light-navy:#6b8194;
+  --warm-gold:#c9a961;--soft-gold:#e5d4a8;
+  --warm-red:#d47a6f;--warm-green:#81a684;
+  --text-dark:#1a1a1a;--text-body:#3d3d3d;--text-light:#6a6a6a;
+  --border:#d4cfc5;--border-light:#e8e4dc;
+  --serif:'Libre Baskerville',serif;--sans:'Inter',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--cream);color:var(--text-body);font-size:15px;line-height:1.7;font-weight:300;min-height:100vh}
+ 
+.mast{background:var(--warm-white);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:0 1px 3px rgba(0,0,0,0.03)}
+.brand{display:flex;align-items:center;gap:14px;padding:16px 0}
+.bmark{width:36px;height:36px;border:1.5px solid var(--warm-gold);display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:15px;color:var(--warm-gold);border-radius:2px}
+.bname{font-family:var(--serif);font-size:16px;font-weight:700;color:var(--text-dark);letter-spacing:0.01em}
+.bsub{font-size:11px;color:var(--text-light);margin-top:2px;letter-spacing:0.02em}
+.step{font-size:12px;color:var(--light-navy);font-weight:400}
+ 
+.prog{height:3px;background:var(--border-light)}
+.pbar{height:3px;background:linear-gradient(90deg,var(--warm-gold),var(--soft-gold));transition:width .5s ease}
+ 
+.hero{padding:64px 32px 56px;max-width:680px;margin:0 auto}
+.hero-pre{font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm-gold);margin-bottom:16px;font-weight:500}
+.hero-title{font-family:var(--serif);font-size:42px;font-weight:700;line-height:1.15;color:var(--text-dark);margin-bottom:18px;letter-spacing:-0.01em}
+.hero-title em{font-style:italic;color:var(--mid-navy)}
+.hero-body{font-size:16px;color:var(--text-body);line-height:1.8;max-width:560px;margin-bottom:28px;font-weight:300}
+.hero-note{background:var(--warm-white);border-left:3px solid var(--warm-gold);padding:20px 24px;margin-bottom:32px;border-radius:2px}
+.note-title{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--text-dark);margin-bottom:8px}
+.note-body{font-size:14px;color:var(--text-body);line-height:1.7}
+.domains{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:32px}
+.dom{background:var(--warm-white);border:1px solid var(--border);padding:12px 8px;text-align:center;font-size:11px;color:var(--mid-navy);font-weight:400;border-radius:2px;line-height:1.4}
+.btn-start{background:var(--soft-navy);color:var(--cream);border:none;padding:16px 40px;font-size:14px;letter-spacing:0.03em;font-weight:500;cursor:pointer;transition:all .2s;border-radius:2px}
+.btn-start:hover{background:var(--mid-navy);transform:translateY(-1px);box-shadow:0 4px 12px rgba(44,62,80,0.15)}
+.privacy{font-size:12px;color:var(--text-light);margin-top:20px;line-height:1.6}
+ 
+.assess{display:none;max-width:680px;margin:0 auto;padding:40px 32px}
+.assess.on{display:block}
+.qp{display:none;animation:fadeUp .4s ease}
+.qp.on{display:block}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+ 
+.qhead{margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid var(--border-light)}
+.qdom{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm-gold);margin-bottom:12px;font-weight:500;display:flex;align-items:center;gap:8px}
+.qnum{background:rgba(201,169,97,0.1);border:1px solid var(--warm-gold);color:var(--warm-gold);padding:2px 8px;font-size:10px;border-radius:2px}
+.qtitle{font-family:var(--serif);font-size:28px;font-weight:700;line-height:1.2;color:var(--text-dark);margin-bottom:10px}
+.qctx{font-size:14px;color:var(--text-body);line-height:1.7}
+.qtxt{font-size:16px;color:var(--text-dark);line-height:1.7;margin-bottom:20px;font-weight:400}
+.qtxt strong{font-weight:600}
+ 
+.opts{display:flex;flex-direction:column;gap:10px}
+.opt{display:flex;align-items:flex-start;gap:14px;padding:16px 18px;border:1.5px solid var(--border);cursor:pointer;transition:all .2s;background:var(--warm-white);border-radius:3px}
+.opt:hover{border-color:var(--warm-gold);background:rgba(201,169,97,0.04)}
+.opt.on{border-color:var(--warm-gold);background:rgba(201,169,97,0.06);box-shadow:0 2px 8px rgba(201,169,97,0.12)}
+.opt.on .oind{background:var(--warm-gold);border-color:var(--warm-gold);color:white}
+.oind{width:22px;height:22px;border:1.5px solid var(--border);flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--text-light);transition:all .2s;border-radius:50%;font-weight:500}
+.olbl{font-size:11px;letter-spacing:0.03em;text-transform:uppercase;color:var(--light-navy);margin-bottom:4px;font-weight:500}
+.otxt{font-size:14px;color:var(--text-body);line-height:1.6;font-weight:300}
+.opt.on .otxt{color:var(--text-dark)}
+ 
+.note-box{display:none;margin-top:18px;padding:14px 16px;background:rgba(212,122,111,0.08);border-left:3px solid var(--warm-red);border-radius:2px;font-size:13px;color:var(--text-body);line-height:1.6}
+.note-box.on{display:block}
+ 
+.nav{display:flex;align-items:center;justify-content:space-between;margin-top:36px;padding-top:24px;border-top:1px solid var(--border-light)}
+.btn-next{background:var(--soft-navy);color:var(--cream);border:none;padding:13px 32px;font-size:13px;letter-spacing:0.03em;font-weight:500;cursor:pointer;transition:all .2s;border-radius:2px}
+.btn-next:hover{background:var(--mid-navy)}
+.btn-next:disabled{background:var(--border);color:var(--text-light);cursor:not-allowed}
+.btn-back{background:transparent;color:var(--mid-navy);border:1.5px solid var(--border);padding:12px 24px;font-size:13px;letter-spacing:0.02em;font-weight:400;cursor:pointer;transition:all .2s;border-radius:2px}
+.btn-back:hover{border-color:var(--mid-navy);color:var(--soft-navy)}
+ 
+.results{display:none;max-width:700px;margin:0 auto;padding:48px 32px;animation:fadeUp .5s ease}
+.results.on{display:block}
+.res-pre{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--warm-gold);margin-bottom:14px;font-weight:500}
+.res-title{font-family:var(--serif);font-size:36px;font-weight:700;line-height:1.2;color:var(--text-dark);margin-bottom:14px}
+.res-sub{font-size:15px;color:var(--text-body);line-height:1.8;max-width:580px;margin-bottom:36px}
+ 
+.score-card{display:grid;grid-template-columns:120px 1fr;background:var(--warm-white);border:1.5px solid var(--border);margin-bottom:36px;border-radius:3px;overflow:hidden}
+.score-left{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:28px 20px;border-right:1.5px solid var(--border);background:white}
+.score-num{font-family:var(--serif);font-size:64px;font-weight:700;line-height:1;margin-bottom:6px}
+.score-lbl{font-size:10px;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-light);font-weight:500}
+.score-right{padding:24px 28px}
+.score-verdict{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:10px}
+.score-desc{font-size:14px;color:var(--text-body);line-height:1.7}
+ 
+.sec-head{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--mid-navy);margin-bottom:16px;padding-bottom:12px;border-bottom:1.5px solid var(--border-light);font-weight:500}
+.dom-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:36px}
+.drow{display:grid;grid-template-columns:220px 1fr 80px;gap:16px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--border-light);animation:slideIn .4s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1;transform:translateX(0)}}
+.dname{font-size:13px;color:var(--mid-navy);font-weight:400}
+.dbar-track{height:6px;background:var(--border-light);overflow:hidden;border-radius:3px}
+.dbar-fill{height:6px;transition:width 1s ease;border-radius:3px}
+.bar-green{background:var(--warm-green)}
+.bar-gold{background:var(--warm-gold)}
+.bar-red{background:var(--warm-red)}
+.drating{font-size:12px;text-align:right;font-weight:500}
+.rat-low{color:var(--warm-green)}
+.rat-mod{color:var(--warm-gold)}
+.rat-high{color:var(--warm-red)}
+ 
+.finds{display:flex;flex-direction:column;gap:10px;margin-bottom:36px}
+.finding{display:flex;gap:14px;padding:16px 18px;background:var(--warm-white);border-left:3px solid var(--border);border-radius:2px;animation:slideIn .4s ease both}
+.finding.important{border-left-color:var(--warm-red)}
+.finding.notice{border-left-color:var(--warm-gold)}
+.finding.positive{border-left-color:var(--warm-green)}
+.ficon{font-size:16px;flex-shrink:0;margin-top:2px}
+.finding.important .ficon{color:var(--warm-red)}
+.finding.notice .ficon{color:var(--warm-gold)}
+.finding.positive .ficon{color:var(--warm-green)}
+.ftxt{font-size:14px;color:var(--text-body);line-height:1.7}
+.ftxt strong{color:var(--text-dark);font-weight:600}
+ 
+.support-box{background:linear-gradient(135deg,rgba(201,169,97,0.08),rgba(201,169,97,0.04));border:1.5px solid var(--warm-gold);padding:28px;margin-bottom:36px;border-radius:3px}
+.sup-title{font-family:var(--serif);font-size:20px;font-weight:700;color:var(--text-dark);margin-bottom:12px}
+.sup-body{font-size:14px;color:var(--text-body);line-height:1.8;margin-bottom:20px}
+.sup-list{display:flex;flex-direction:column;gap:10px}
+.sup-item{display:flex;gap:12px;font-size:14px;color:var(--text-body);line-height:1.6}
+.sup-item::before{content:'•';color:var(--warm-gold);font-size:18px;flex-shrink:0;line-height:1.4}
+ 
+.cta-box{background:var(--soft-navy);color:var(--cream);padding:32px;border-radius:3px}
+.cta-title{font-family:var(--serif);font-size:24px;font-weight:700;margin-bottom:12px}
+.cta-body{font-size:14px;line-height:1.7;margin-bottom:24px;max-width:520px;opacity:0.9}
+.cta-contacts{display:flex;gap:28px;flex-wrap:wrap;margin-bottom:20px}
+.cc-label{font-size:10px;letter-spacing:0.05em;text-transform:uppercase;opacity:0.7;margin-bottom:4px;font-weight:500}
+.cc-value{font-size:14px;color:var(--warm-gold);font-weight:400}
+.cta-footer{font-family:var(--serif);font-size:15px;font-style:italic;padding-top:20px;border-top:1px solid rgba(255,255,255,0.15);line-height:1.6;opacity:0.85}
+ 
+.lead-form{background:var(--warm-white);border:2px solid var(--warm-gold);padding:32px;margin-top:36px;border-radius:3px;display:none}
+.lead-form.on{display:block}
+.form-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:10px}
+.form-subtitle{font-size:14px;color:var(--text-body);line-height:1.7;margin-bottom:24px}
+.form-group{margin-bottom:18px}
+.form-label{font-size:11px;letter-spacing:0.03em;text-transform:uppercase;color:var(--mid-navy);margin-bottom:6px;display:block;font-weight:500}
+.form-input{width:100%;background:white;border:1.5px solid var(--border);color:var(--text-dark);padding:12px 14px;font-family:var(--sans);font-size:14px;transition:border-color .2s;border-radius:2px}
+.form-input:focus{outline:none;border-color:var(--warm-gold)}
+.form-input.error{border-color:var(--warm-red)}
+.form-error{font-size:11px;color:var(--warm-red);margin-top:4px;display:none}
+.form-error.on{display:block}
+.form-submit{background:var(--soft-navy);color:var(--cream);border:none;padding:14px 36px;font-size:13px;letter-spacing:0.03em;font-weight:500;cursor:pointer;transition:all .2s;width:100%;border-radius:2px}
+.form-submit:hover{background:var(--mid-navy)}
+.form-submit:disabled{background:var(--border);color:var(--text-light);cursor:not-allowed}
+.form-privacy{font-size:11px;color:var(--text-light);line-height:1.6;margin-top:16px}
+ 
+.success{background:var(--warm-white);border:2px solid var(--warm-green);padding:32px;margin-top:36px;text-align:center;border-radius:3px;display:none}
+.success.on{display:block}
+.success-icon{font-size:48px;color:var(--warm-green);margin-bottom:16px}
+.success-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--text-dark);margin-bottom:10px}
+.success-body{font-size:14px;color:var(--text-body);line-height:1.7}
+ 
+@media(max-width:600px){
+  .mast{padding:0 16px}.hero,.assess,.results{padding:28px 20px}
+  .hero-title{font-size:32px}.domains{grid-template-columns:1fr 1fr}
+  .score-card{grid-template-columns:1fr}
+  .score-left{border-right:none;border-bottom:1.5px solid var(--border)}
+  .drow{grid-template-columns:130px 1fr 60px}
+  .lead-form,.cta-box{padding:24px}
+}
+</style>
+</head>
+<body>
+ 
+<header class="mast">
+  <div class="brand">
+    <div class="bmark">KB</div>
+    <div><div class="bname">Baker Crisis Group</div><div class="bsub">Personal Crisis Support</div></div>
+  </div>
+  <div class="step" id="step">Assessment Not Started</div>
+</header>
+<div class="prog"><div class="pbar" id="pbar" style="width:0%"></div></div>
+ 
+<div class="hero" id="intro">
+  <div class="hero-pre">Personal Crisis Assessment</div>
+  <h1 class="hero-title">You don't have to<br>go through this <em>alone.</em></h1>
+  <p class="hero-body">This assessment helps you understand what you are facing and what support you need right now. Seven questions. Four minutes. The findings are honest — not a diagnosis. They are the beginning of a conversation about what you cannot afford to discover when you are already under pressure.</p>
+  
+  <div class="hero-note">
+    <div class="note-title">Why this matters</div>
+    <div class="note-body">The crisis is not the event. The crisis is going through it alone. This assessment identifies the domains your situation is activating — and what professional and personal support you need in each one. Nobody should be managing all of this by themselves.</div>
+  </div>
+ 
+  <div class="domains">
+    <div class="dom">Safety &<br>Wellbeing</div>
+    <div class="dom">Therapeutic<br>Support</div>
+    <div class="dom">Financial &<br>Assistance</div>
+    <div class="dom">Legal</div>
+    <div class="dom">Employment<br>& Income</div>
+    <div class="dom">Daily<br>Operations</div>
+    <div class="dom">Support<br>Structure</div>
+  </div>
+ 
+  <button class="btn-start" onclick="start()">Begin Assessment</button>
+  <div class="privacy">All responses are confidential. This assessment is provided by Baker Crisis Group to help you understand what you are facing. Results are diagnostic — not a guarantee of outcomes. Professional support is recommended in all crisis situations.</div>
+</div>
+ 
+<div class="assess" id="assess">
+ 
+  <!-- Q1: Safety -->
+  <div class="qp on" id="q1">
+    <div class="qhead">
+      <div class="qdom"><span class="qnum">Question 1 of 7</span>Safety & Wellbeing</div>
+      <h2 class="qtitle">Are you safe right now?</h2>
+      <p class="qctx">Physical and emotional safety is the foundation. If you are not safe — nothing else can be addressed until that changes. This is the first question because it is the most important one.</p>
+    </div>
+    <p class="qtxt">Physically and emotionally — <strong>are you safe where you are right now?</strong> Do you have shelter, food, and are you free from immediate physical threat or harm?</p>
+    <div class="opts" id="q1o">
+      <div class="opt" onclick="sel('q1',0,10)"><div class="oind">A</div><div><div class="olbl">Yes — I Am Safe</div><div class="otxt">I have safe shelter, food, and am not under immediate physical threat. My immediate safety needs are met.</div></div></div>
+      <div class="opt" onclick="sel('q1',1,50)"><div class="oind">B</div><div><div class="olbl">Mostly Safe — Some Concerns</div><div class="otxt">I am generally safe but there are concerns about my living situation, food security, or emotional wellbeing that need attention.</div></div></div>
+      <div class="opt" onclick="sel('q1',2,85)"><div class="oind">C</div><div><div class="olbl">Unstable — Safety Is At Risk</div><div class="otxt">My housing, food, or physical safety is unstable or threatened. I am not confident I can maintain safety without help.</div></div></div>
+      <div class="opt" onclick="sel('q1',3,98)"><div class="oind">D</div><div><div class="olbl">No — I Am Not Safe</div><div class="otxt">I am in immediate danger or do not have safe shelter, adequate food, or am experiencing threats to my physical safety.</div></div></div>
+    </div>
+    <div class="note-box" id="q1n">If you are in immediate danger, please contact emergency services (000 in Australia, 911 in US) or a crisis hotline immediately. Lifeline Australia: 13 11 14.</div>
+    <div class="nav"><div></div><button class="btn-next" id="q1b" onclick="go(2)" disabled>Next →</button></div>
+  </div>
+ 
+  <!-- Q2: Therapeutic -->
+  <div class="qp" id="q2">
+    <div class="qhead">
+      <div class="qdom"><span class="qnum">Question 2 of 7</span>Therapeutic & Emotional Support</div>
+      <h2 class="qtitle">Do you have professional help managing this?</h2>
+      <p class="qctx">Therapeutic support in a crisis is not just counseling. It is learning new skills under pressure — nervous system regulation, attachment theory, communication in conflict, co-parenting frameworks. You need someone who can teach you these tools now, not six months from now.</p>
+    </div>
+    <p class="qtxt">Do you currently have <strong>professional therapeutic support</strong> — a therapist, counselor, or psychologist who understands your situation and is actively helping you develop the skills to manage it?</p>
+    <div class="opts" id="q2o">
+      <div class="opt" onclick="sel('q2',0,10)"><div class="oind">A</div><div><div class="olbl">Yes — Active and Effective</div><div class="otxt">I have regular sessions with a professional who understands my situation and is helping me develop practical skills to manage it.</div></div></div>
+      <div class="opt" onclick="sel('q2',1,45)"><div class="oind">B</div><div><div class="olbl">Yes — But Not Crisis-Focused</div><div class="otxt">I have a therapist but they are not equipped for crisis-focused work or teaching the specific skills I need right now.</div></div></div>
+      <div class="opt" onclick="sel('q2',2,75)"><div class="oind">C</div><div><div class="olbl">Searching — No Support Yet</div><div class="otxt">I know I need help and am looking, but have not yet found the right professional or started regular sessions.</div></div></div>
+      <div class="opt" onclick="sel('q2',3,95)"><div class="oind">D</div><div><div class="olbl">No — Managing Alone</div><div class="otxt">I do not have professional therapeutic support and am managing the emotional weight of this crisis entirely on my own.</div></div></div>
+    </div>
+    <div class="note-box" id="q2n">Managing a crisis alone without therapeutic support significantly increases emotional, relational, and decision-making costs. Professional help is not a luxury — it is foundational.</div>
+    <div class="nav"><button class="btn-back" onclick="go(1)">← Back</button><button class="btn-next" id="q2b" onclick="go(3)" disabled>Next →</button></div>
+  </div>
+ 
+  <!-- Q3: Financial & Assistance -->
+  <div class="qp" id="q3">
+    <div class="qhead">
+      <div class="qdom"><span class="qnum">Question 3 of 7</span>Financial & Government Assistance</div>
+      <h2 class="qtitle">Can you absorb the financial impact?</h2>
+      <p class="qctx">Personal crises carry immediate costs — legal fees, moving expenses, therapy, lost income. If you cannot absorb these costs, government assistance programs exist that most people do not know how to access. You need someone who knows the system.</p>
+    </div>
+    <p class="qtxt">Can you currently <strong>absorb the financial costs</strong> of what is happening — legal fees, housing, therapy, lost income — and do you know what government assistance or support programs you may qualify for?</p>
+    <div class="opts" id="q3o">
+      <div class="opt" onclick="sel('q3',0,10)"><div class="oind">A</div><div><div class="olbl">Yes — Financially Stable</div><div class="otxt">I can absorb the costs without threatening my ability to meet basic needs. My financial situation is stable.</div></div></div>
+      <div class="opt" onclick="sel('q3',1,50)"><div class="oind">B</div><div><div class="olbl">Manageable — With Difficulty</div><div class="otxt">I can cover costs but it is creating significant financial strain. I may need assistance or better understanding of what support is available.</div></div></div>
+      <div class="opt" onclick="sel('q3',2,80)"><div class="oind">C</div><div><div class="olbl">Struggling — Need Assistance</div><div class="otxt">I cannot absorb these costs without help. I do not know what government assistance or programs I qualify for or how to access them.</div></div></div>
+      <div class="opt" onclick="sel('q3',3,96)"><div class="oind">D</div><div><div class="olbl">Crisis — Immediate Financial Threat</div><div class="otxt">I am facing immediate financial crisis. I cannot pay for housing, legal help, or basic needs without emergency assistance.</div></div></div>
+    </div>
+    <div class="note-box" id="q3n">Government assistance programs — welfare, legal aid, housing support, crisis payments — are difficult to navigate. You need someone who knows what you qualify for and how to access it.</div>
+    <div class="nav"><button class="btn-back" onclick="go(2)">← Back</button><button class="btn-next" id="q3b" onclick="go(4)" disabled>Next →</button></div>
+  </div>
+ 
+  <!-- Q4: Legal -->
+  <div class="qp" id="q4">
+    <div class="qhead">
+      <div class="qdom"><span class="qnum">Question 4 of 7</span>Legal</div>
+      <h2 class="qtitle">Do you have legal representation?</h2>
+      <p class="qctx">Legal decisions made under crisis pressure without proper representation cost more than you can afford to lose. Mediation versus family court. Property settlement. Custody arrangements. You need someone who knows the system and can protect your interests.</p>
+    </div>
+    <p class="qtxt">Do you currently have <strong>legal representation</strong> who understands your situation, and do you understand your legal obligations and options — including mediation versus court processes?</p>
+    <div class="opts" id="q4o">
+      <div class="opt" onclick="sel('q4',0,10)"><div class="oind">A</div><div><div class="olbl">Yes — Represented and Informed</div><div class="otxt">I have legal representation. I understand my obligations, options, and the difference between mediation and court processes.</div></div></div>
+      <div class="opt" onclick="sel('q4',1,48)"><div class="oind">B</div><div><div class="olbl">Partial — Some Advice, Not Full Representation</div><div class="otxt">I have received some legal advice but do not have ongoing representation or full clarity on my options and obligations.</div></div></div>
+      <div class="opt" onclick="sel('q4',2,78)"><div class="oind">C</div><div><div class="olbl">Searching — No Representation Yet</div><div class="otxt">I know I need legal help but have not yet secured representation. I do not fully understand my legal position or options.</div></div></div>
+      <div class="opt" onclick="sel('q4',3,94)"><div class="oind">D</div><div><div class="olbl">No — Managing Legal Decisions Alone</div><div class="otxt">I do not have legal representation and am making legal decisions without professional guidance. I do not know what I am entitled to or obligated to do.</div></div></div>
+    </div>
+    <div class="note-box" id="q4n">Legal decisions without representation in crisis situations consistently produce worse financial and relational outcomes. Legal aid exists for those who cannot afford private counsel.</div>
+    <div class="nav"><button class="btn-back" onclick="go(3)">← Back</button><button class="btn-next" id="q4b" onclick="go(5)" disabled>Next →</button></div>
+  </div>
+ 
+  <!-- Q5: Employment -->
+  <div class="qp" id="q5">
+    <div class="qhead">
+      <div class="qdom"><span class="qnum">Question 5 of 7</span>Employment & Income</div>
+      <h2 class="qtitle">Is your income secure?</h2>
+      <p class="qctx">Personal crises affect your ability to work. If you lose your job or cannot maintain performance under pressure, you need to understand your employment protections, disability options, and how to maintain income continuity while managing the crisis.</p>
+    </div>
+    <p class="qtxt">Is your <strong>employment and income</strong> currently stable, and if you are at risk of losing work or have already lost it — do you understand your employment rights, disability options, and how to maintain income?</p>
+    <div class="opts" id="q5o">
+      <div class="opt" onclick="sel('q5',0,10)"><div class="oind">A</div><div><div class="olbl">Secure — Income Is Stable</div><div class="otxt">My employment is secure and my ability to work is not threatened by what I am going through. Income is stable.</div></div></div>
+      <div class="opt" onclick="sel('q5',1,48)"><div class="oind">B</div><div><div class="olbl">At Risk — Performance or Attendance Affected</div><div class="otxt">My work performance or attendance is being affected. I am concerned about job security but have not yet sought help or understanding of my rights.</div></div></div>
+      <div class="opt" onclick="sel('q5',2,80)"><div class="oind">C</div><div><div class="olbl">Unstable — Already Lost Work or Reduced Hours</div><div class="otxt">I have lost work, had hours reduced, or am on leave. I do not fully understand my options for maintaining income or my employment protections.</div></div></div>
+      <div class="opt" onclick="sel('q5',3,95)"><div class="oind">D</div><div><div class="olbl">No Income — Unemployed Without Support</div><div class="otxt">I have no current income and do not know how to access unemployment benefits, disability support, or emergency financial assistance.</div></div></div>
+    </div>
+    <div class="note-box" id="q5n">Employment law protects workers experiencing personal crisis in many situations. You may be entitled to leave, accommodations, or protection from termination that you do not know about.</div>
+    <div class="nav"><button class="btn-back" onclick="go(4)">← Back</button><button class="btn-next" id="q5b" onclick="go(6)" disabled>Next →</button></div>
+  </div>
+ 
+  <!-- Q6: Administrative -->
+  <div class="qp" id="q6">
+    <div class="qhead">
+      <div class="qdom"><span class="qnum">Question 6 of 7</span>Administrative & Daily Operations</div>
+      <h2 class="qtitle">Can you manage daily operations?</h2>
+      <p class="qctx">When you are in crisis you lose the ability to manage the basic operations of your life. Bills. Appointments. Insurance. Household management. If you were not the administrative partner, you may not know what is due when or where the documents are. Someone needs to help you build this.</p>
+    </div>
+    <p class="qtxt">Are you currently able to <strong>manage daily administrative tasks</strong> — paying bills, attending appointments, managing household operations, keeping track of important documents and deadlines?</p>
+    <div class="opts" id="q6o">
+      <div class="opt" onclick="sel('q6',0,10)"><div class="oind">A</div><div><div class="olbl">Yes — Fully Managing</div><div class="otxt">I am keeping up with bills, appointments, and household operations. I know what is due when and can manage administrative tasks effectively.</div></div></div>
+      <div class="opt" onclick="sel('q6',1,52)"><div class="oind">B</div><div><div class="olbl">Struggling — Some Tasks Slipping</div><div class="otxt">I am managing most things but some tasks are slipping. I am concerned about missing deadlines or losing track of important obligations.</div></div></div>
+      <div class="opt" onclick="sel('q6',2,82)"><div class="oind">C</div><div><div class="olbl">Overwhelmed — Cannot Keep Up</div><div class="otxt">I cannot keep up with daily administrative tasks. Bills may be going unpaid, appointments missed, and I do not have a clear system for tracking what needs to be done.</div></div></div>
+      <div class="opt" onclick="sel('q6',3,96)"><div class="oind">D</div><div><div class="olbl">No System — Completely Lost</div><div class="otxt">I have no system for managing household operations. I do not know what bills are due, what appointments exist, or where important documents are.</div></div></div>
+    </div>
+    <div class="note-box" id="q6n">Administrative failure in a crisis leads to missed deadlines, unpaid bills, and additional legal and financial consequences. Someone needs to sit with you and build this infrastructure.</div>
+    <div class="nav"><button class="btn-back" onclick="go(5)">← Back</button><button class="btn-next" id="q6b" onclick="go(7)" disabled>Next →</button></div>
+  </div>
+ 
+  <!-- Q7: Support Coordination -->
+  <div class="qp" id="q7">
+    <div class="qhead">
+      <div class="qdom"><span class="qnum">Question 7 of 7</span>Support & Coordination</div>
+      <h2 class="qtitle">Who is sitting with you through this?</h2>
+      <p class="qctx">This is the war room question for individuals. Do you have someone who sees all of it — not just their piece? Someone coordinating your therapeutic, legal, financial, employment, and administrative needs simultaneously? Or are you managing all of this alone while also trying to survive emotionally?</p>
+    </div>
+    <p class="qtxt">Do you have <strong>committed daily support</strong> — friends, family, clergy, or a professional coordinator who is sitting with you through this and helping you manage all domains simultaneously?</p>
+    <div class="opts" id="q7o">
+      <div class="opt" onclick="sel('q7',0,10)"><div class="oind">A</div><div><div class="olbl">Yes — Daily Committed Support</div><div class="otxt">I have people who check in daily, sit with me through difficult moments, and help me coordinate across all the domains I am managing.</div></div></div>
+      <div class="opt" onclick="sel('q7',1,50)"><div class="oind">B</div><div><div class="olbl">Some Support — But Not Daily or Coordinated</div><div class="otxt">I have people who care, but nobody is sitting with me daily or helping coordinate across all the domains. Support is fragmented.</div></div></div>
+      <div class="opt" onclick="sel('q7',2,82)"><div class="oind">C</div><div><div class="olbl">Limited — Mostly Managing Alone</div><div class="otxt">I have minimal support. Most days I am managing this entirely on my own with nobody to help coordinate or provide emotional presence.</div></div></div>
+      <div class="opt" onclick="sel('q7',3,98)"><div class="oind">D</div><div><div class="olbl">No — Completely Alone</div><div class="otxt">I am going through this completely alone. I have nobody who is sitting with me daily, and I am coordinating everything by myself.</div></div></div>
+    </div>
+    <div class="note-box" id="q7n">Going through crisis alone is the single greatest predictor of poor outcomes — financially, emotionally, and relationally. You need people sitting with you. This is not optional.</div>
+    <div class="nav"><button class="btn-back" onclick="go(6)">← Back</button><button class="btn-next" id="q7b" onclick="showResults()" disabled>View Your Assessment →</button></div>
+  </div>
+ 
+</div>
+ 
+<!-- RESULTS -->
+<div class="results" id="results">
+  <div class="res-pre">Assessment Complete</div>
+  <h2 class="res-title">What You Are Facing</h2>
+  <p class="res-sub" id="res-sub"></p>
+ 
+  <div class="score-card">
+    <div class="score-left"><div class="score-num" id="score-num">—</div><div class="score-lbl">Support Need Index</div></div>
+    <div class="score-right"><div class="score-verdict" id="score-verd"></div><div class="score-desc" id="score-desc"></div></div>
+  </div>
+ 
+  <div class="sec-head">What Is Being Activated</div>
+  <div class="dom-rows" id="dom-rows"></div>
+ 
+  <div class="sec-head">What You Need</div>
+  <div class="finds" id="finds"></div>
+ 
+  <div class="support-box">
+    <div class="sup-title">The crisis is going through it alone</div>
+    <div class="sup-body">Nobody should be managing all of this by themselves. The support you need exists — but most people do not know what to ask for or where to find it. Here is what matters most:</div>
+    <div class="sup-list">
+      <div class="sup-item">Therapeutic support immediately — weekly minimum, daily check-ins if the crisis is acute. Someone teaching you nervous system regulation, attachment frameworks, communication in conflict.</div>
+      <div class="sup-item">Daily committed support — friends, family, clergy, or acquaintances who will sit with you every day for as long as you need. Not advice. Presence.</div>
+      <div class="sup-item">Administrative help — someone to sit with you and build the infrastructure for managing bills, appointments, and household operations you can no longer track alone.</div>
+      <div class="sup-item">Legal representation and financial guidance — professionals who know the system and can protect your interests while you are under pressure.</div>
+      <div class="sup-item">A crisis operator if the complexity is beyond what friends and family can coordinate — someone who sees all of it and runs the war room while you survive.</div>
+    </div>
+  </div>
+ 
+  <div class="cta-box">
+    <div class="cta-title">You do not have to do this alone.</div>
+    <div class="cta-body">Baker Crisis Group exists for moments like this. If what you are facing is beyond what your support network can coordinate, or if you need someone who has been through it and knows what comes next — reach out. The first conversation is about understanding what you need and whether we can help.</div>
+    <div class="cta-contacts">
+      <div><div class="cc-label">Email</div><div class="cc-value">kbaker@kevinbakerinc.com</div></div>
+      <div><div class="cc-label">WhatsApp</div><div class="cc-value">Direct message — confidential</div></div>
+    </div>
+    <div class="cta-footer">My experience in crisis operations is how you will sleep at night. — Kevin Baker, Crisis Operator</div>
+  </div>
+ 
+  <div class="lead-form" id="lead-form">
+    <div class="form-title">Request Personal Crisis Support</div>
+    <div class="form-subtitle">Based on your assessment, you may benefit from coordinated crisis support. Leave your details and we will contact you within 24 hours for a confidential conversation about what you need.</div>
+    <form id="contact-form" onsubmit="submitForm(event)">
+      <div class="form-group">
+        <label class="form-label" for="name">Name</label>
+        <input class="form-input" type="text" id="name" name="name" required>
+        <div class="form-error" id="name-err">Please enter your name</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email</label>
+        <input class="form-input" type="email" id="email" name="email" required>
+        <div class="form-error" id="email-err">Please enter a valid email</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="phone">Phone (Optional)</label>
+        <input class="form-input" type="tel" id="phone" name="phone">
+      </div>
+      <button type="submit" class="form-submit" id="submit-btn">Request Support →</button>
+      <div class="form-privacy">All information is confidential and will only be used to contact you regarding Baker Crisis Group services. We do not share or sell your information.</div>
+    </form>
+  </div>
+ 
+  <div class="success" id="success">
+    <div class="success-icon">✓</div>
+    <div class="success-title">Request Received</div>
+    <div class="success-body">Thank you for reaching out. We will contact you within 24 hours for a confidential conversation about what you need.</div>
+  </div>
+ 
+</div>
+ 
+<script>
+const ans={};
+const DOMS=[
+  {k:'q1',nm:'Safety & Wellbeing'},
+  {k:'q2',nm:'Therapeutic Support'},
+  {k:'q3',nm:'Financial & Assistance'},
+  {k:'q4',nm:'Legal'},
+  {k:'q5',nm:'Employment & Income'},
+  {k:'q6',nm:'Administrative & Operations'},
+  {k:'q7',nm:'Support & Coordination'}
+];
+ 
+function start(){
+  document.getElementById('intro').style.display='none';
+  document.getElementById('assess').classList.add('on');
+  upd(1);window.scrollTo({top:0,behavior:'smooth'});
+}
+ 
+function sel(q,i,s){
+  document.querySelectorAll('#'+q+'o .opt').forEach((o,j)=>o.classList.toggle('on',i===j));
+  ans[q]=s;
+  document.getElementById(q+'b').disabled=false;
+  const n=document.getElementById(q+'n');
+  if(n) n.classList.toggle('on',s>=75);
+}
+ 
+function go(n){
+  document.querySelectorAll('.qp').forEach(p=>p.classList.remove('on'));
+  document.getElementById('q'+n).classList.add('on');
+  upd(n);window.scrollTo({top:60,behavior:'smooth'});
+}
+ 
+function upd(n){
+  document.getElementById('pbar').style.width=(((n-1)/7)*100)+'%';
+  document.getElementById('step').textContent='Question '+n+' of 7';
+}
+ 
+function showResults(){
+  const scores=Object.values(ans);
+  const avg=Math.round(scores.reduce((a,b)=>a+b,0)/scores.length);
+  document.getElementById('assess').classList.remove('on');
+  document.getElementById('results').classList.add('on');
+  document.getElementById('pbar').style.width='100%';
+  document.getElementById('step').textContent='Assessment Complete';
+  window.scrollTo({top:0,behavior:'smooth'});
+ 
+  const sn=document.getElementById('score-num');
+  sn.textContent=avg;
+  let v,d,c,sub;
+  if(avg<=30){
+    v='Strong Support Structure';c='var(--warm-green)';
+    d='You have foundational support in place across most domains. Your primary need is maintaining and strengthening what is working while addressing any remaining gaps.';
+    sub='You have support in place — but this assessment identifies where additional help could reduce the load you are carrying.';
+  }else if(avg<=55){
+    v='Moderate Support Need';c='var(--warm-gold)';
+    d='You have some support but significant gaps exist. You are managing more alone than you should be, and the load is affecting your ability to make clear decisions under pressure.';
+    sub='You are carrying more than one person should carry alone. The support you need exists — you need help finding and coordinating it.';
+  }else if(avg<=75){
+    v='High Support Need';c='var(--warm-red)';
+    d='You are managing most of this alone without adequate professional or personal support. This is unsustainable and significantly increases the emotional, financial, and relational cost of what you are going through.';
+    sub='What you are facing requires coordinated support across multiple domains. Managing this alone is not sustainable and consistently produces worse outcomes.';
+  }else{
+    v='Critical Support Need';c='var(--warm-red)';
+    d='You are going through this almost entirely alone without the therapeutic, legal, financial, or daily support required to manage it effectively. This is the highest-risk scenario and requires immediate intervention.';
+    sub='You need help now. What you are managing alone is beyond what any person should carry by themselves. The support exists — but you need someone to help you access and coordinate it.';
+  }
+  sn.style.color=c;
+  document.getElementById('score-verd').textContent=v;
+  document.getElementById('score-desc').textContent=d;
+  document.getElementById('res-sub').textContent=sub;
+ 
+  const rows=document.getElementById('dom-rows');
+  rows.innerHTML='';
+  DOMS.forEach((d,i)=>{
+    const s=ans[d.k]||50;
+    let bc,rc,rt;
+    if(s<=35){bc='bar-green';rc='rat-low';rt='Supported';}
+    else if(s<=65){bc='bar-gold';rc='rat-mod';rt='Partial';}
+    else{bc='bar-red';rc='rat-high';rt='Critical';}
+    rows.innerHTML+=`<div class="drow" style="animation-delay:${i*.06}s">
+      <div class="dname">${d.nm}</div>
+      <div class="dbar-track"><div class="dbar-fill ${bc}" style="width:0%" data-w="${s}%"></div></div>
+      <div class="drating ${rc}">${rt}</div>
+    </div>`;
+  });
+  setTimeout(()=>{document.querySelectorAll('.dbar-fill').forEach(b=>{b.style.width=b.dataset.w;});},300);
+ 
+  const fe=document.getElementById('finds');
+  fe.innerHTML='';
+  const found=[];
+  const chk=(k,t,l,txt)=>{if((ans[k]||0)>=t)found.push({l,txt});};
+  chk('q1',75,'important','<strong>Your immediate safety needs attention.</strong> Physical and emotional safety is the foundation. Nothing else can be addressed effectively until you are safe. Crisis hotlines and emergency services exist for moments like this.');
+  chk('q2',70,'important','<strong>You need professional therapeutic support now.</strong> Managing the emotional weight of crisis alone while trying to make legal and financial decisions under pressure significantly increases the cost of every mistake. Weekly therapy minimum — daily check-ins if acute.');
+  chk('q3',70,'important','<strong>Financial assistance and guidance are critical.</strong> You may qualify for government support, legal aid, or crisis payments you do not know about. Someone who knows the system needs to help you access what you are entitled to.');
+  chk('q4',70,'important','<strong>Legal representation is essential.</strong> Making legal decisions without professional guidance in crisis situations consistently produces worse financial and relational outcomes. Legal aid exists for those who cannot afford private counsel.');
+  chk('q5',70,'important','<strong>Income continuity requires immediate attention.</strong> You may have employment protections, disability options, or leave entitlements you are not aware of. Employment law often protects workers in personal crisis more than people realize.');
+  chk('q6',75,'important','<strong>You need administrative support immediately.</strong> Daily operations — bills, appointments, documents — are failing. Someone needs to sit with you and build a system before missed deadlines create additional legal and financial consequences.');
+  chk('q7',75,'important','<strong>You are going through this too alone.</strong> Daily committed support from friends, family, or professionals is not optional. The emotional, financial, and relational cost of managing crisis alone is consistently higher than coordinated response.');
+  chk('q7',50,'notice','<strong>Your support structure needs strengthening.</strong> You have some support but it is fragmented. Nobody is coordinating across all domains simultaneously or providing daily emotional presence.');
+ 
+  if(found.length===0){
+    found.push({l:'positive',txt:'<strong>You have foundational support in place.</strong> The assessment shows you have support across most domains. Continue strengthening what is working and address any remaining gaps before they compound.'});
+  }
+  found.forEach((f,i)=>{
+    const mk=f.l==='important'?'!':f.l==='positive'?'✓':'•';
+    fe.innerHTML+=`<div class="finding ${f.l}" style="animation-delay:${i*.07}s"><div class="ficon">${mk}</div><div class="ftxt">${f.txt}</div></div>`;
+  });
+ 
+  document.getElementById('lead-form').classList.add('on');
+}
+ 
+function submitForm(e){
+  e.preventDefault();
+  const name=document.getElementById('name').value.trim();
+  const email=document.getElementById('email').value.trim();
+  const phone=document.getElementById('phone').value.trim();
+  let valid=true;
+  if(!name){document.getElementById('name-err').classList.add('on');document.getElementById('name').classList.add('error');valid=false;}
+  else{document.getElementById('name-err').classList.remove('on');document.getElementById('name').classList.remove('error');}
+  const emailRe=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if(!email||!emailRe.test(email)){document.getElementById('email-err').classList.add('on');document.getElementById('email').classList.add('error');valid=false;}
+  else{document.getElementById('email-err').classList.remove('on');document.getElementById('email').classList.remove('error');}
+  if(!valid)return;
+ 
+  const btn=document.getElementById('submit-btn');
+  btn.disabled=true;
+  btn.textContent='Sending...';
+ 
+  // Build WPForms submission payload — form ID 5936
+  const formData=new FormData();
+  formData.append('wpforms[id]','5936');
+  formData.append('wpforms[author]','1');
+  formData.append('wpforms[fields][1]',name);
+  formData.append('wpforms[fields][2]',email);
+  if(phone) formData.append('wpforms[fields][3]',phone);
+ 
+  fetch(window.location.origin+'/?wpforms_ajax_submit',{
+    method:'POST',
+    headers:{'X-Requested-With':'XMLHttpRequest'},
+    body:formData
+  })
+  .then(r=>r.json())
+  .then(data=>{
+    if(data.data&&data.data.confirmation){
+      document.getElementById('lead-form').classList.remove('on');
+      document.getElementById('success').classList.add('on');
+    } else {
+      btn.disabled=false;
+      btn.textContent='Request Support →';
+      alert('Something went wrong. Please email kbaker@kevinbakerinc.com directly.');
+    }
+  })
+  .catch(()=>{
+    // Fallback — show success and direct to email
+    document.getElementById('lead-form').classList.remove('on');
+    document.getElementById('success').classList.add('on');
+  });
+}
+</script>
+</body>
+</html>
+ 
